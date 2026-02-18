@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, Noto_Sans_KR } from "next/font/google";
+import { Cormorant_Garamond, Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
 
-const display = Space_Grotesk({
+const display = Cormorant_Garamond({
   variable: "--font-display",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
