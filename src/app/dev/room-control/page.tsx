@@ -18,6 +18,13 @@ async function postJson<T>(url: string, body: Record<string, unknown>) {
 export default function RoomControlPage() {
   const [hostUserId, setHostUserId] = useState("");
   const [roomTitle, setRoomTitle] = useState("No Wedding Ceremony");
+  const [templateId, setTemplateId] = useState("classic_hall");
+  const [backgroundKey, setBackgroundKey] = useState("");
+  const [coupleNameA, setCoupleNameA] = useState("");
+  const [coupleNameB, setCoupleNameB] = useState("");
+  const [accountBank, setAccountBank] = useState("");
+  const [accountHolder, setAccountHolder] = useState("");
+  const [accountNumber, setAccountNumber] = useState("");
   const [roomId, setRoomId] = useState("");
   const [roomStatus, setRoomStatus] = useState("");
   const [createResult, setCreateResult] = useState("");
@@ -57,7 +64,17 @@ export default function RoomControlPage() {
     try {
       const data = await postJson<{ roomId: string; joinCode: string }>(
         "/api/rooms/create",
-        { hostUserId, title: roomTitle },
+        {
+          hostUserId,
+          title: roomTitle,
+          templateId,
+          backgroundKey: backgroundKey || null,
+          coupleNameA: coupleNameA || null,
+          coupleNameB: coupleNameB || null,
+          accountBank: accountBank || null,
+          accountHolder: accountHolder || null,
+          accountNumber: accountNumber || null,
+        },
       );
       setCreateResult(`roomId=${data.roomId}, joinCode=${data.joinCode}`);
       setRoomId(data.roomId);
@@ -130,6 +147,17 @@ export default function RoomControlPage() {
           <form className="mt-5 space-y-3" onSubmit={onCreateRoom}>
             <input className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm" placeholder="Host user UUID" value={hostUserId} onChange={(e) => setHostUserId(e.target.value)} required />
             <input className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm" placeholder="Room title" value={roomTitle} onChange={(e) => setRoomTitle(e.target.value)} required />
+            <select className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm" value={templateId} onChange={(e) => setTemplateId(e.target.value)}>
+              <option value="classic_hall">classic_hall</option>
+              <option value="garden_daylight">garden_daylight</option>
+              <option value="night_reception">night_reception</option>
+            </select>
+            <input className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm" placeholder="Background key (optional)" value={backgroundKey} onChange={(e) => setBackgroundKey(e.target.value)} />
+            <input className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm" placeholder="Couple name A" value={coupleNameA} onChange={(e) => setCoupleNameA(e.target.value)} />
+            <input className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm" placeholder="Couple name B" value={coupleNameB} onChange={(e) => setCoupleNameB(e.target.value)} />
+            <input className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm" placeholder="Account bank (optional)" value={accountBank} onChange={(e) => setAccountBank(e.target.value)} />
+            <input className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm" placeholder="Account holder (optional)" value={accountHolder} onChange={(e) => setAccountHolder(e.target.value)} />
+            <input className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm" placeholder="Account number (optional)" value={accountNumber} onChange={(e) => setAccountNumber(e.target.value)} />
             <button type="submit" disabled={loadingCreate} className="rounded-md bg-cyan-500 px-4 py-2 text-sm font-semibold text-slate-950 disabled:opacity-50">{loadingCreate ? "Creating..." : "Create Room"}</button>
           </form>
           <p className="mt-4 min-h-6 text-sm text-cyan-300">{createResult}</p>

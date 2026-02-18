@@ -31,6 +31,10 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 - `/Volumes/data/Dev/know-wedding/src/app/archive/page.tsx`
 - `/Volumes/data/Dev/know-wedding/src/app/dev/room-control/page.tsx` (개발 콘솔)
 
+## Functional Spec
+
+- `/Volumes/data/Dev/know-wedding/docs/MVP_FEATURE_SPEC.md`
+
 ## Required Env
 
 - `NEXT_PUBLIC_SUPABASE_URL`

@@ -7,6 +7,14 @@ type CreateRoomPayload = {
   scheduledAt?: string | null;
   themeId?: string | null;
   capacity?: number;
+  templateId?: string | null;
+  backgroundKey?: string | null;
+  coupleNameA?: string | null;
+  coupleNameB?: string | null;
+  greetingMessage?: string | null;
+  accountBank?: string | null;
+  accountHolder?: string | null;
+  accountNumber?: string | null;
 };
 
 export async function POST(request: Request) {

@@ -7,6 +7,14 @@ type CreateRoomBody = {
   scheduledAt?: string | null;
   themeId?: string | null;
   capacity?: number;
+  templateId?: string | null;
+  backgroundKey?: string | null;
+  coupleNameA?: string | null;
+  coupleNameB?: string | null;
+  greetingMessage?: string | null;
+  accountBank?: string | null;
+  accountHolder?: string | null;
+  accountNumber?: string | null;
 };
 
 function randomJoinCode() {
@@ -29,6 +37,16 @@ Deno.serve(async (req) => {
 
     const supabase = createServiceClient();
 
+    let backgroundKey = body.backgroundKey ?? null;
+    if (!backgroundKey && body.templateId) {
+      const { data: template } = await supabase
+        .from("room_templates")
+        .select("default_background_key")
+        .eq("id", body.templateId)
+        .single();
+      backgroundKey = template?.default_background_key ?? null;
+    }
+
     const { data: room, error: roomError } = await supabase
       .from("rooms")
       .insert({
@@ -38,6 +56,14 @@ Deno.serve(async (req) => {
         theme_id: body.themeId ?? null,
         capacity: Math.min(body.capacity ?? 30, 30),
         join_code: randomJoinCode(),
+        template_id: body.templateId ?? null,
+        background_key: backgroundKey,
+        couple_name_a: body.coupleNameA ?? null,
+        couple_name_b: body.coupleNameB ?? null,
+        greeting_message: body.greetingMessage ?? null,
+        account_bank: body.accountBank ?? null,
+        account_holder: body.accountHolder ?? null,
+        account_number: body.accountNumber ?? null,
       })
       .select("id, join_code")
       .single();

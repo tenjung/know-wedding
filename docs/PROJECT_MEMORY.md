@@ -25,10 +25,15 @@ Last updated: 2026-02-18
   - `/Volumes/data/Dev/know-wedding/supabase/functions/start_ceremony/index.ts`
   - `/Volumes/data/Dev/know-wedding/supabase/functions/end_event/index.ts`
   - `/Volumes/data/Dev/know-wedding/supabase/functions/payment_webhook/index.ts`
+- MVP feature upgrade migration added:
+  - `/Volumes/data/Dev/know-wedding/supabase/migrations/20260218235500_mvp_feature_upgrade.sql`
+- Functional spec doc added:
+  - `/Volumes/data/Dev/know-wedding/docs/MVP_FEATURE_SPEC.md`
 
 ## Next Recommended Tasks
 
 1. Link project with Supabase CLI and run migration on remote.
-2. Replace placeholder join code generation with collision-safe flow.
-3. Add webhook signature verification (Stripe or Toss) in `payment_webhook`.
-4. Add integration tests for RLS and room capacity edge cases.
+2. Deploy upgraded edge functions (`create_room`, `start_ceremony`, `end_event`).
+3. Replace placeholder join code generation with collision-safe flow.
+4. Add webhook signature verification (Stripe or Toss) in `payment_webhook`.
+5. Add integration tests for RLS and room capacity edge cases.
