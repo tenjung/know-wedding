@@ -15,6 +15,13 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
   - `/Volumes/data/Dev/know-wedding/supabase/functions/end_event/index.ts`
   - `/Volumes/data/Dev/know-wedding/supabase/functions/payment_webhook/index.ts`
 
+## Required Env
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `NEXT_PUBLIC_SUPABASE_SCHEMA` (default: `nowedding`)
+- `SUPABASE_SERVICE_ROLE_KEY` (required for Next API wrappers that invoke Edge Functions)
+
 ## Getting Started
 
 First, run the development server:
