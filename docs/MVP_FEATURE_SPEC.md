@@ -55,6 +55,33 @@ Updated: 2026-02-18
 - NFT/blockchain features
 - Multi-room horizontal scaling beyond current room architecture
 
+## Monetization Direction (Direct)
+
+### Pricing
+
+- Base virtual wedding room: 390,000 KRW
+  - 1 event
+  - 1-year archive retention
+- Premium package: 990,000 KRW+
+  - Custom theme
+  - Video production add-on
+  - Unlimited retention
+  - USB delivery
+
+### Upsell Funnel
+
+- Free invitation
+- VIP design invitation
+- Virtual wedding room
+- Video production add-on
+
+### Additional Revenue
+
+- Theme marketplace sales
+- Extended data retention plans
+- Partnership advertising
+- Linked shooting package sales
+
 ## Data Model Additions
 
 - `nowedding.room_templates`
@@ -80,4 +107,3 @@ Updated: 2026-02-18
 - `create_room` function upgraded for new room metadata.
 - `start_ceremony` and `end_event` record ceremony timestamps.
 - Dev room control page supports template/couple/account inputs.
-

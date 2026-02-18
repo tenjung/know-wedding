@@ -25,6 +25,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 ## Product UI Routes
 
 - `/Volumes/data/Dev/know-wedding/src/app/page.tsx` (브랜드 랜딩, 3-Layer 구조)
+- `/Volumes/data/Dev/know-wedding/src/app/pricing/page.tsx` (가격/수익화)
 - `/Volumes/data/Dev/know-wedding/src/app/invitation/free/page.tsx`
 - `/Volumes/data/Dev/know-wedding/src/app/invitation/vip/page.tsx`
 - `/Volumes/data/Dev/know-wedding/src/app/virtual-room/page.tsx`

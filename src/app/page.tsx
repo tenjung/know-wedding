@@ -30,6 +30,13 @@ const problems = [
   "노웨딩 선택 시 축하/축의금/기록의 명분 약화",
 ];
 
+const pricing = [
+  { name: "기본 가상 웨딩룸", price: "39만원", detail: "1회 행사 · 1년 보관" },
+  { name: "프리미엄 패키지", price: "99만원+", detail: "커스텀 테마 · 영상 제작 · 무기한 보관 · USB 전달" },
+];
+
+const revenueStreams = ["테마 마켓 판매", "데이터 연장 보관", "제휴 광고", "촬영 패키지 연계"];
+
 export default function Home() {
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#f7f3eb] text-[#1f2937]">
@@ -55,6 +62,9 @@ export default function Home() {
             </Link>
             <Link href="/dev/room-control" className="rounded-full border border-[#2d6a6d] px-5 py-3 text-sm font-semibold text-[#1f6b70] transition hover:bg-[#e7f5f5]">
               개발 콘솔
+            </Link>
+            <Link href="/pricing" className="rounded-full border border-[#8b5e34] px-5 py-3 text-sm font-semibold text-[#6f4424] transition hover:bg-[#f4e7d7]">
+              가격/수익화
             </Link>
           </div>
         </header>
@@ -94,6 +104,29 @@ export default function Home() {
             <div className="rounded-xl bg-[#f9ecdb] p-3"><b>축하</b><p className="mt-1">실시간 채팅/메시지/아바타</p></div>
             <div className="rounded-xl bg-[#f9ecdb] p-3"><b>축의금</b><p className="mt-1">디지털 아이템 구매 이벤트</p></div>
             <div className="rounded-xl bg-[#f9ecdb] p-3"><b>기록</b><p className="mt-1">행사 후 아카이브 보존</p></div>
+          </div>
+        </section>
+
+        <section className="space-y-4 rounded-3xl border border-[#d8c6b3] bg-[#fff8ee] p-6">
+          <h2 className="text-2xl font-bold text-[#4b2e1f]">가격/수익화 구조</h2>
+          <div className="grid gap-4 md:grid-cols-2">
+            {pricing.map((pkg) => (
+              <article key={pkg.name} className="rounded-2xl bg-[#f9ecdb] p-4">
+                <h3 className="font-bold text-[#4b2e1f]">{pkg.name}</h3>
+                <p className="mt-1 text-2xl font-extrabold text-[#8b5e34]">{pkg.price}</p>
+                <p className="mt-1 text-sm text-[#5b4a3b]">{pkg.detail}</p>
+              </article>
+            ))}
+          </div>
+          <div className="rounded-2xl bg-[#fdf5e8] p-4 text-sm text-[#5b4a3b]">
+            업셀: 무료 청첩장 -&gt; 디자인 VIP -&gt; 가상 웨딩 -&gt; 영상 제작 추가
+          </div>
+          <div className="grid gap-2 text-sm md:grid-cols-2">
+            {revenueStreams.map((item) => (
+              <div key={item} className="rounded-xl bg-[#f9ecdb] px-3 py-2 text-[#5b4a3b]">
+                {item}
+              </div>
+            ))}
           </div>
         </section>
       </main>
