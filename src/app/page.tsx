@@ -1,6 +1,7 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
 
 async function postJson<T>(url: string, body: Record<string, unknown>) {
   const response = await fetch(url, {
@@ -17,6 +18,8 @@ async function postJson<T>(url: string, body: Record<string, unknown>) {
 export default function Home() {
   const [hostUserId, setHostUserId] = useState("");
   const [roomTitle, setRoomTitle] = useState("No Wedding Ceremony");
+  const [roomId, setRoomId] = useState("");
+  const [roomStatus, setRoomStatus] = useState("");
   const [createResult, setCreateResult] = useState("");
   const [joinCode, setJoinCode] = useState("");
   const [guestUserId, setGuestUserId] = useState("");
@@ -25,6 +28,27 @@ export default function Home() {
 
   const [loadingCreate, setLoadingCreate] = useState(false);
   const [loadingJoin, setLoadingJoin] = useState(false);
+  const [loadingStart, setLoadingStart] = useState(false);
+  const [loadingEnd, setLoadingEnd] = useState(false);
+
+  useEffect(() => {
+    const supabase = createClient();
+
+    async function bootstrapAuth() {
+      const { data: sessionData } = await supabase.auth.getSession();
+      if (sessionData.session?.user.id) {
+        setHostUserId((current) => current || sessionData.session!.user.id);
+        return;
+      }
+
+      const { data } = await supabase.auth.signInAnonymously();
+      if (data.user?.id) {
+        setHostUserId((current) => current || data.user!.id);
+      }
+    }
+
+    bootstrapAuth();
+  }, []);
 
   async function onCreateRoom(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -36,6 +60,8 @@ export default function Home() {
         { hostUserId, title: roomTitle },
       );
       setCreateResult(`roomId=${data.roomId}, joinCode=${data.joinCode}`);
+      setRoomId(data.roomId);
+      setRoomStatus("lobby");
       setJoinCode(data.joinCode);
     } catch (error) {
       setCreateResult(error instanceof Error ? error.message : "Failed");
@@ -54,6 +80,7 @@ export default function Home() {
         { userId: guestUserId, nickname, joinCode },
       );
       setJoinResult(`roomId=${data.roomId}, memberId=${data.memberId}`);
+      setRoomId((current) => current || data.roomId);
     } catch (error) {
       setJoinResult(error instanceof Error ? error.message : "Failed");
     } finally {
@@ -61,9 +88,43 @@ export default function Home() {
     }
   }
 
+  async function onStartCeremony() {
+    if (!roomId || !hostUserId) return;
+    setLoadingStart(true);
+    setRoomStatus("");
+    try {
+      const data = await postJson<{ status: string }>("/api/rooms/start", {
+        roomId,
+        hostUserId,
+      });
+      setRoomStatus(data.status);
+    } catch (error) {
+      setRoomStatus(error instanceof Error ? error.message : "Failed");
+    } finally {
+      setLoadingStart(false);
+    }
+  }
+
+  async function onEndEvent() {
+    if (!roomId || !hostUserId) return;
+    setLoadingEnd(true);
+    setRoomStatus("");
+    try {
+      const data = await postJson<{ status: string }>("/api/rooms/end", {
+        roomId,
+        hostUserId,
+      });
+      setRoomStatus(data.status);
+    } catch (error) {
+      setRoomStatus(error instanceof Error ? error.message : "Failed");
+    } finally {
+      setLoadingEnd(false);
+    }
+  }
+
   return (
     <div className="min-h-screen bg-slate-950 px-6 py-10 text-slate-100">
-      <main className="mx-auto grid w-full max-w-4xl gap-6 md:grid-cols-2">
+      <main className="mx-auto grid w-full max-w-6xl gap-6 md:grid-cols-3">
         <section className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
           <h1 className="text-2xl font-semibold">Create Room</h1>
           <p className="mt-2 text-sm text-slate-300">
@@ -131,6 +192,43 @@ export default function Home() {
             </button>
           </form>
           <p className="mt-4 min-h-6 text-sm text-emerald-300">{joinResult}</p>
+        </section>
+
+        <section className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
+          <h2 className="text-2xl font-semibold">Room Control</h2>
+          <p className="mt-2 text-sm text-slate-300">
+            Calls <code>/api/rooms/start</code> and <code>/api/rooms/end</code>.
+          </p>
+          <div className="mt-5 space-y-3">
+            <input
+              className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm"
+              placeholder="Room ID"
+              value={roomId}
+              onChange={(e) => setRoomId(e.target.value)}
+            />
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={onStartCeremony}
+                disabled={loadingStart || !roomId || !hostUserId}
+                className="rounded-md bg-amber-300 px-4 py-2 text-sm font-semibold text-slate-950 disabled:opacity-50"
+              >
+                {loadingStart ? "Starting..." : "Start Ceremony"}
+              </button>
+              <button
+                type="button"
+                onClick={onEndEvent}
+                disabled={loadingEnd || !roomId || !hostUserId}
+                className="rounded-md bg-rose-300 px-4 py-2 text-sm font-semibold text-slate-950 disabled:opacity-50"
+              >
+                {loadingEnd ? "Ending..." : "End Event"}
+              </button>
+            </div>
+            <p className="text-xs text-slate-400">
+              Host ID: <code>{hostUserId || "loading..."}</code>
+            </p>
+            <p className="min-h-6 text-sm text-amber-200">{roomStatus}</p>
+          </div>
         </section>
       </main>
     </div>

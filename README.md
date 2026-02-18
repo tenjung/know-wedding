@@ -15,6 +15,13 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
   - `/Volumes/data/Dev/know-wedding/supabase/functions/end_event/index.ts`
   - `/Volumes/data/Dev/know-wedding/supabase/functions/payment_webhook/index.ts`
 
+## Next API Wrappers
+
+- `/Volumes/data/Dev/know-wedding/src/app/api/rooms/create/route.ts`
+- `/Volumes/data/Dev/know-wedding/src/app/api/rooms/join/route.ts`
+- `/Volumes/data/Dev/know-wedding/src/app/api/rooms/start/route.ts`
+- `/Volumes/data/Dev/know-wedding/src/app/api/rooms/end/route.ts`
+
 ## Required Env
 
 - `NEXT_PUBLIC_SUPABASE_URL`
