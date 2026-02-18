@@ -1,5 +1,20 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Project Rule
+
+- Supabase schema for this app is `nowedding`.
+- See `/Volumes/data/Dev/know-wedding/AGENTS.md` and `/Volumes/data/Dev/know-wedding/docs/PROJECT_MEMORY.md`.
+
+## Supabase Structure
+
+- Migration: `/Volumes/data/Dev/know-wedding/supabase/migrations/20260218230500_init_nowedding_schema.sql`
+- Edge functions:
+  - `/Volumes/data/Dev/know-wedding/supabase/functions/create_room/index.ts`
+  - `/Volumes/data/Dev/know-wedding/supabase/functions/join_room/index.ts`
+  - `/Volumes/data/Dev/know-wedding/supabase/functions/start_ceremony/index.ts`
+  - `/Volumes/data/Dev/know-wedding/supabase/functions/end_event/index.ts`
+  - `/Volumes/data/Dev/know-wedding/supabase/functions/payment_webhook/index.ts`
+
 ## Getting Started
 
 First, run the development server:
