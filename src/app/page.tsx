@@ -1,233 +1,99 @@
-"use client";
+import Link from "next/link";
 
-import { FormEvent, useEffect, useState } from "react";
-import { createClient } from "@/lib/supabase/client";
+const layers = [
+  {
+    id: "Layer 1",
+    title: "무료 모바일 청첩장",
+    desc: "결혼식을 하지 않아도 지인에게 관계 변화와 소식을 자연스럽게 전달하는 유입 채널.",
+    href: "/invitation/free",
+    cta: "무료 시작",
+  },
+  {
+    id: "Layer 2",
+    title: "VIP 디자인 초대장",
+    desc: "브랜드형 레이아웃, 커스텀 타이포, 애니메이션 테마로 커플 서사를 표현하는 프리미엄 레이어.",
+    href: "/invitation/vip",
+    cta: "VIP 보기",
+  },
+  {
+    id: "Layer 3",
+    title: "VIP 노웨딩 가상공간",
+    desc: "실시간 2D 아바타 웨딩룸에서 축하, 메시지, 구매 이벤트, 기록 아카이브까지 연결하는 핵심 수익 레이어.",
+    href: "/virtual-room",
+    cta: "가상공간 체험",
+  },
+];
 
-async function postJson<T>(url: string, body: Record<string, unknown>) {
-  const response = await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
-
-  const data = (await response.json()) as T & { error?: string };
-  if (!response.ok) throw new Error(data.error ?? "Request failed");
-  return data;
-}
+const problems = [
+  "과도한 결혼식 비용과 보여주기식 행사 피로",
+  "직접 참석이 어려운 하객 증가",
+  "노웨딩 선택 시 축하/축의금/기록의 명분 약화",
+];
 
 export default function Home() {
-  const [hostUserId, setHostUserId] = useState("");
-  const [roomTitle, setRoomTitle] = useState("No Wedding Ceremony");
-  const [roomId, setRoomId] = useState("");
-  const [roomStatus, setRoomStatus] = useState("");
-  const [createResult, setCreateResult] = useState("");
-  const [joinCode, setJoinCode] = useState("");
-  const [guestUserId, setGuestUserId] = useState("");
-  const [nickname, setNickname] = useState("");
-  const [joinResult, setJoinResult] = useState("");
-
-  const [loadingCreate, setLoadingCreate] = useState(false);
-  const [loadingJoin, setLoadingJoin] = useState(false);
-  const [loadingStart, setLoadingStart] = useState(false);
-  const [loadingEnd, setLoadingEnd] = useState(false);
-
-  useEffect(() => {
-    const supabase = createClient();
-
-    async function bootstrapAuth() {
-      const { data: sessionData } = await supabase.auth.getSession();
-      if (sessionData.session?.user.id) {
-        setHostUserId((current) => current || sessionData.session!.user.id);
-        return;
-      }
-
-      const { data } = await supabase.auth.signInAnonymously();
-      if (data.user?.id) {
-        setHostUserId((current) => current || data.user!.id);
-      }
-    }
-
-    bootstrapAuth();
-  }, []);
-
-  async function onCreateRoom(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setLoadingCreate(true);
-    setCreateResult("");
-    try {
-      const data = await postJson<{ roomId: string; joinCode: string }>(
-        "/api/rooms/create",
-        { hostUserId, title: roomTitle },
-      );
-      setCreateResult(`roomId=${data.roomId}, joinCode=${data.joinCode}`);
-      setRoomId(data.roomId);
-      setRoomStatus("lobby");
-      setJoinCode(data.joinCode);
-    } catch (error) {
-      setCreateResult(error instanceof Error ? error.message : "Failed");
-    } finally {
-      setLoadingCreate(false);
-    }
-  }
-
-  async function onJoinRoom(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setLoadingJoin(true);
-    setJoinResult("");
-    try {
-      const data = await postJson<{ roomId: string; memberId: string }>(
-        "/api/rooms/join",
-        { userId: guestUserId, nickname, joinCode },
-      );
-      setJoinResult(`roomId=${data.roomId}, memberId=${data.memberId}`);
-      setRoomId((current) => current || data.roomId);
-    } catch (error) {
-      setJoinResult(error instanceof Error ? error.message : "Failed");
-    } finally {
-      setLoadingJoin(false);
-    }
-  }
-
-  async function onStartCeremony() {
-    if (!roomId || !hostUserId) return;
-    setLoadingStart(true);
-    setRoomStatus("");
-    try {
-      const data = await postJson<{ status: string }>("/api/rooms/start", {
-        roomId,
-        hostUserId,
-      });
-      setRoomStatus(data.status);
-    } catch (error) {
-      setRoomStatus(error instanceof Error ? error.message : "Failed");
-    } finally {
-      setLoadingStart(false);
-    }
-  }
-
-  async function onEndEvent() {
-    if (!roomId || !hostUserId) return;
-    setLoadingEnd(true);
-    setRoomStatus("");
-    try {
-      const data = await postJson<{ status: string }>("/api/rooms/end", {
-        roomId,
-        hostUserId,
-      });
-      setRoomStatus(data.status);
-    } catch (error) {
-      setRoomStatus(error instanceof Error ? error.message : "Failed");
-    } finally {
-      setLoadingEnd(false);
-    }
-  }
-
   return (
-    <div className="min-h-screen bg-slate-950 px-6 py-10 text-slate-100">
-      <main className="mx-auto grid w-full max-w-6xl gap-6 md:grid-cols-3">
-        <section className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
-          <h1 className="text-2xl font-semibold">Create Room</h1>
-          <p className="mt-2 text-sm text-slate-300">
-            Calls Next API route <code>/api/rooms/create</code>.
+    <div className="relative min-h-screen overflow-hidden bg-[#f7f3eb] text-[#1f2937]">
+      <div className="pointer-events-none absolute -left-40 top-[-120px] h-96 w-96 rounded-full bg-[#ffd8a8] opacity-70 blur-3xl" />
+      <div className="pointer-events-none absolute -right-32 top-20 h-80 w-80 rounded-full bg-[#a8dadc] opacity-70 blur-3xl" />
+      <div className="pointer-events-none absolute bottom-[-160px] left-1/3 h-96 w-96 rounded-full bg-[#f1c0e8] opacity-70 blur-3xl" />
+
+      <main className="relative mx-auto flex w-full max-w-6xl flex-col gap-10 px-6 py-12">
+        <header className="rounded-3xl border border-[#b7a796] bg-[#fff8ee]/90 p-8 shadow-[0_14px_36px_rgba(70,40,20,0.12)]">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#8b5e34]">No Wedding, Know Wedding</p>
+          <h1 className="mt-3 max-w-3xl text-4xl font-bold leading-tight text-[#4b2e1f] md:text-5xl">
+            행사는 줄이고, 결혼의 본질은 더 선명하게
+          </h1>
+          <p className="mt-4 max-w-2xl text-base leading-relaxed text-[#5b4a3b] md:text-lg">
+            알림, 축하, 축의금, 기록 보존을 하나의 디지털 웨딩 경험으로 설계합니다.
           </p>
-          <form className="mt-5 space-y-3" onSubmit={onCreateRoom}>
-            <input
-              className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm"
-              placeholder="Host user UUID"
-              value={hostUserId}
-              onChange={(e) => setHostUserId(e.target.value)}
-              required
-            />
-            <input
-              className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm"
-              placeholder="Room title"
-              value={roomTitle}
-              onChange={(e) => setRoomTitle(e.target.value)}
-              required
-            />
-            <button
-              type="submit"
-              disabled={loadingCreate}
-              className="rounded-md bg-cyan-500 px-4 py-2 text-sm font-semibold text-slate-950 disabled:opacity-50"
-            >
-              {loadingCreate ? "Creating..." : "Create Room"}
-            </button>
-          </form>
-          <p className="mt-4 min-h-6 text-sm text-cyan-300">{createResult}</p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Link href="/virtual-room" className="rounded-full bg-[#4b2e1f] px-5 py-3 text-sm font-semibold text-[#fff8ee] transition hover:-translate-y-0.5">
+              가상공간 바로가기
+            </Link>
+            <Link href="/archive" className="rounded-full border border-[#8b5e34] px-5 py-3 text-sm font-semibold text-[#6f4424] transition hover:bg-[#f4e7d7]">
+              아카이브 구조 보기
+            </Link>
+            <Link href="/dev/room-control" className="rounded-full border border-[#2d6a6d] px-5 py-3 text-sm font-semibold text-[#1f6b70] transition hover:bg-[#e7f5f5]">
+              개발 콘솔
+            </Link>
+          </div>
+        </header>
+
+        <section className="grid gap-4 rounded-3xl border border-[#e7d9c8] bg-[#fffdf9] p-6 md:grid-cols-3">
+          {problems.map((problem) => (
+            <article key={problem} className="rounded-2xl bg-[#fdf5e8] p-4 text-sm text-[#604633] shadow-sm">
+              {problem}
+            </article>
+          ))}
         </section>
 
-        <section className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
-          <h2 className="text-2xl font-semibold">Join Room</h2>
-          <p className="mt-2 text-sm text-slate-300">
-            Calls Next API route <code>/api/rooms/join</code>.
-          </p>
-          <form className="mt-5 space-y-3" onSubmit={onJoinRoom}>
-            <input
-              className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm"
-              placeholder="Join code"
-              value={joinCode}
-              onChange={(e) => setJoinCode(e.target.value)}
-              required
-            />
-            <input
-              className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm"
-              placeholder="Guest user UUID"
-              value={guestUserId}
-              onChange={(e) => setGuestUserId(e.target.value)}
-              required
-            />
-            <input
-              className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm"
-              placeholder="Nickname"
-              value={nickname}
-              onChange={(e) => setNickname(e.target.value)}
-              required
-            />
-            <button
-              type="submit"
-              disabled={loadingJoin}
-              className="rounded-md bg-emerald-400 px-4 py-2 text-sm font-semibold text-slate-950 disabled:opacity-50"
-            >
-              {loadingJoin ? "Joining..." : "Join Room"}
-            </button>
-          </form>
-          <p className="mt-4 min-h-6 text-sm text-emerald-300">{joinResult}</p>
+        <section className="space-y-4">
+          <h2 className="text-2xl font-bold text-[#4b2e1f] md:text-3xl">서비스 레이어 구조</h2>
+          <div className="grid gap-4 md:grid-cols-3">
+            {layers.map((layer, index) => (
+              <article
+                key={layer.id}
+                className="group rounded-3xl border border-[#d8c6b3] bg-[#fff8ee] p-6 shadow-[0_10px_24px_rgba(80,40,10,0.08)] transition hover:-translate-y-1"
+                style={{ animationDelay: `${index * 120}ms` }}
+              >
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8b5e34]">{layer.id}</p>
+                <h3 className="mt-2 text-xl font-bold text-[#4b2e1f]">{layer.title}</h3>
+                <p className="mt-3 min-h-20 text-sm leading-relaxed text-[#5b4a3b]">{layer.desc}</p>
+                <Link href={layer.href} className="mt-6 inline-flex rounded-full border border-[#8b5e34] px-4 py-2 text-sm font-semibold text-[#6f4424] transition group-hover:bg-[#f4e7d7]">
+                  {layer.cta}
+                </Link>
+              </article>
+            ))}
+          </div>
         </section>
 
-        <section className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
-          <h2 className="text-2xl font-semibold">Room Control</h2>
-          <p className="mt-2 text-sm text-slate-300">
-            Calls <code>/api/rooms/start</code> and <code>/api/rooms/end</code>.
-          </p>
-          <div className="mt-5 space-y-3">
-            <input
-              className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm"
-              placeholder="Room ID"
-              value={roomId}
-              onChange={(e) => setRoomId(e.target.value)}
-            />
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={onStartCeremony}
-                disabled={loadingStart || !roomId || !hostUserId}
-                className="rounded-md bg-amber-300 px-4 py-2 text-sm font-semibold text-slate-950 disabled:opacity-50"
-              >
-                {loadingStart ? "Starting..." : "Start Ceremony"}
-              </button>
-              <button
-                type="button"
-                onClick={onEndEvent}
-                disabled={loadingEnd || !roomId || !hostUserId}
-                className="rounded-md bg-rose-300 px-4 py-2 text-sm font-semibold text-slate-950 disabled:opacity-50"
-              >
-                {loadingEnd ? "Ending..." : "End Event"}
-              </button>
-            </div>
-            <p className="text-xs text-slate-400">
-              Host ID: <code>{hostUserId || "loading..."}</code>
-            </p>
-            <p className="min-h-6 text-sm text-amber-200">{roomStatus}</p>
+        <section className="rounded-3xl border border-[#d8c6b3] bg-[#fff8ee] p-6">
+          <h2 className="text-2xl font-bold text-[#4b2e1f]">운영 구조</h2>
+          <div className="mt-4 grid gap-3 text-sm md:grid-cols-4">
+            <div className="rounded-xl bg-[#f9ecdb] p-3"><b>알림</b><p className="mt-1">모바일 청첩장 링크 배포</p></div>
+            <div className="rounded-xl bg-[#f9ecdb] p-3"><b>축하</b><p className="mt-1">실시간 채팅/메시지/아바타</p></div>
+            <div className="rounded-xl bg-[#f9ecdb] p-3"><b>축의금</b><p className="mt-1">디지털 아이템 구매 이벤트</p></div>
+            <div className="rounded-xl bg-[#f9ecdb] p-3"><b>기록</b><p className="mt-1">행사 후 아카이브 보존</p></div>
           </div>
         </section>
       </main>

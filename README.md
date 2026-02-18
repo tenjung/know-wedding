@@ -22,6 +22,15 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 - `/Volumes/data/Dev/know-wedding/src/app/api/rooms/start/route.ts`
 - `/Volumes/data/Dev/know-wedding/src/app/api/rooms/end/route.ts`
 
+## Product UI Routes
+
+- `/Volumes/data/Dev/know-wedding/src/app/page.tsx` (브랜드 랜딩, 3-Layer 구조)
+- `/Volumes/data/Dev/know-wedding/src/app/invitation/free/page.tsx`
+- `/Volumes/data/Dev/know-wedding/src/app/invitation/vip/page.tsx`
+- `/Volumes/data/Dev/know-wedding/src/app/virtual-room/page.tsx`
+- `/Volumes/data/Dev/know-wedding/src/app/archive/page.tsx`
+- `/Volumes/data/Dev/know-wedding/src/app/dev/room-control/page.tsx` (개발 콘솔)
+
 ## Required Env
 
 - `NEXT_PUBLIC_SUPABASE_URL`
