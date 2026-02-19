@@ -1,26 +1,158 @@
 @import "tailwindcss";
 
-:root {
-  --background: #f7f3eb;
-  --foreground: #1f2937;
-}
+@plugin "tailwindcss-animate";
 
-@theme inline {
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --font-sans: var(--font-body);
+  --font-serif: var(--font-display);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-body);
-  --font-mono: var(--font-display);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+  --animate-float: float 6s ease-in-out infinite;
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-body), sans-serif;
+@layer base {
+  :root {
+    --background: #f8f2ef;
+    --foreground: #2b1d1a;
+    --card: #ffffff;
+    --card-foreground: #2b1d1a;
+    --popover: #ffffff;
+    --popover-foreground: #2b1d1a;
+    --primary: #4a2521;
+    --primary-foreground: #ffffff;
+    --secondary: #f4ebe8;
+    --secondary-foreground: #4a2521;
+    --muted: #e3c2b4;
+    --muted-foreground: #6a4a42;
+    --accent: #b9826e;
+    --accent-foreground: #ffffff;
+    --destructive: #cc4f4f;
+    --destructive-foreground: #ffffff;
+    --border: #e3c2b4;
+    --input: #e3c2b4;
+    --ring: #b9826e;
+    --chart-1: #b9826e;
+    --chart-2: #4a2521;
+    --chart-3: #7b4a38;
+    --chart-4: #e3c2b4;
+    --chart-5: #f8f2ef;
+    --radius: 1rem;
+  }
+
+  .dark {
+    --background: #1a1614;
+    --foreground: #f8f2ef;
+    --card: #25211f;
+    --card-foreground: #f8f2ef;
+    --popover: #25211f;
+    --popover-foreground: #f8f2ef;
+    --primary: #b9826e;
+    --primary-foreground: #1a1614;
+    --secondary: #3d2320;
+    --secondary-foreground: #f8f2ef;
+    --muted: #3d2320;
+    --muted-foreground: #9b5f49;
+    --accent: #9b5f49;
+    --accent-foreground: #f8f2ef;
+    --destructive: #883333;
+    --destructive-foreground: #f8f2ef;
+    --border: #3d2320;
+    --input: #3d2320;
+    --ring: #b9826e;
+    --chart-1: #b9826e;
+    --chart-2: #7b4a38;
+    --chart-3: #4a2521;
+    --chart-4: #3d2320;
+    --chart-5: #25211f;
+  }
 }
 
-h1,
-h2,
-h3 {
-  font-family: var(--font-display), serif;
-  letter-spacing: 0.01em;
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground antialiased selection:bg-accent/20;
+    font-family: var(--font-body), sans-serif;
+  }
+  h1, h2, h3, h4 {
+    @apply tracking-tight;
+    font-family: var(--font-display), serif;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-white/60 backdrop-blur-md border border-white/40 shadow-sm;
+  }
+  
+  .glass-card {
+    @apply bg-white/70 backdrop-blur-xl border border-muted/50 shadow-[0_8px_32px_rgba(185,130,110,0.08)];
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-br from-[#3d2320] to-[#7b4a38];
+  }
 }

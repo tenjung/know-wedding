@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Noto_Sans_KR } from "next/font/google";
+import { Toaster } from "sonner";
 import "./globals.css";
 
 const display = Cormorant_Garamond({
@@ -26,7 +27,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className={`${display.variable} ${body.variable} antialiased`}>{children}</body>
+      <body className={`${display.variable} ${body.variable} antialiased`}>
+        {children}
+        <Toaster position="top-center" richColors />
+      </body>
     </html>
   );
 }
