@@ -34,7 +34,6 @@ export function AvatarModal({ isOpen, onClose }: Props) {
   const [cfg, setCfg]   = useState<AvatarConfig>(avatarConfig ?? DEFAULT_AVATAR);
   const [tab, setTab]   = useState<Tab>('skin');
   const [saving, setSaving] = useState(false);
-  const supabase = createClient();
 
   const update = useCallback((patch: Partial<AvatarConfig>) => {
     setCfg(prev => ({ ...prev, ...patch }));
@@ -42,6 +41,7 @@ export function AvatarModal({ isOpen, onClose }: Props) {
 
   const handleSave = async () => {
     setSaving(true);
+    const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
     // 로그인 없어도 로컬 스토어에 반영 (데모용)
