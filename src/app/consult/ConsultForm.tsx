@@ -61,8 +61,6 @@ export function ConsultForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDone, setIsDone] = useState(false);
 
-  const supabase = createClient();
-
   const handleNext = () => {
     if (currentStep === 0 && !formData.name.trim()) {
       toast.error("성함을 입력해 주세요.");
@@ -87,6 +85,7 @@ export function ConsultForm() {
   const handleSubmit = async () => {
     setIsSubmitting(true);
     try {
+      const supabase = createClient();
       const { error } = await supabase
         .from("consult_inquiries")
         .insert({
